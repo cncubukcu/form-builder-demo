@@ -69,7 +69,7 @@ export default class CustomizeSection extends Component {
             onChange={e => this.handlePlaceholder(e)}
           />
           <IsRequired handleRequiredState={this.props.handleRequiredState} itemKey={this.props.itemKey}/>
-          Max Char Length<input value={this.state.maxLength} type="number" onChange={e => this.handleMaxLength(e)}/>
+          <label>Max Char Length</label><input value={this.state.maxLength} type="number" onChange={e => this.handleMaxLength(e)}/>
           <div>MAX CHARACTER</div>
           <div> - ALIGN SECTION</div>
         </div>
@@ -94,6 +94,8 @@ export default class CustomizeSection extends Component {
             onChange={e => this.handlePlaceholder(e)}
           />
           <IsRequired handleRequiredState={this.props.handleRequiredState} itemKey={this.props.itemKey}/>
+          <label>Max Char Length</label><input value={this.state.maxLength} type="number" onChange={e => this.handleMaxLength(e)}/>
+
           <div>MAX CHARACTER</div>
           <div> - ALIGN SECTION</div>
         </div>
@@ -142,6 +144,8 @@ export default class CustomizeSection extends Component {
           />
           Rows <input type="number" value={this.props.style.textarea.rows} onChange={e => this.handleTextareaRows(e)}/>
           Columns <input type="number" value={this.props.style.textarea.cols} onChange={e => this.handleTextareaCols(e)}/>
+          <label>Max Char Length</label><input value={this.state.maxLength} type="number" onChange={e => this.handleMaxLength(e)}/>
+
         </div>
       );
     }

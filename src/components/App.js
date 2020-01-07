@@ -6,6 +6,8 @@ import DeleteButton from "./DeleteButton";
 import FormElementGenerator from "./FormElementGenerator";
 import CustomizeSection from "./CustomizeSection";
 import ResetButton from "./ResetButton";
+import CreateFormButton from "./CreateFormButton";
+import FormCreator from './FormCreator'
 
 const formElements = [
   {
@@ -36,9 +38,10 @@ export default class App extends Component {
   state = {
     draggedElement: {},
     dropZoneElements: [],
-    elementClicked: "",
+    elementClicked: '',
     customizeSectionType: null,
-    key: ""
+    key: "",
+    formCreated: false
   };
 
   onDragStart = (e, el) => {
@@ -225,7 +228,12 @@ export default class App extends Component {
     this.setState({ dropZoneElements: newArr });
   }
 
+  createForm = () => {
+    this.setState({formCreated: true})
+  }
+
   render() {
+    if(!this.state.formCreated) {
     //console.log(this.state.dropZoneElements);
     return (
       <DragDropContext onDragEnd={this.onDragEnd}>
@@ -315,8 +323,13 @@ export default class App extends Component {
           </Droppable>
         </div>
         <ResetButton resetForm={this.resetForm} />
+        <CreateFormButton createForm={this.createForm}/>
       </DragDropContext>
     );
+        }
+        else {
+          return <FormCreator formElements={this.state.dropZoneElements}/>
+        }
   }
 }
 
