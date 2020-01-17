@@ -10,7 +10,7 @@ export default class CreateTheForm extends Component {
               case "formName":
                 return (
                   <div key={index.toString()}>
-                    <label htmlFor={item.key}>{item.style.name}</label>{" "}
+                    <label htmlFor={item.key}>{item.style.name || 'Name:' }</label>{" "}
                     <input
                       type="text"
                       placeholder={item.style.placeholder}
@@ -21,7 +21,7 @@ export default class CreateTheForm extends Component {
               case "email":
                 return (
                   <div key={index.toString()}>
-                    <label htmlFor={item.key}>{item.style.name}</label>{" "}
+                    <label htmlFor={item.key}>{item.style.name || 'E-Mail:'}</label>{" "}
                     <input
                       type="email"
                       placeholder={item.style.placeholder}

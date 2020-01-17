@@ -1,26 +1,37 @@
 import React, { Component } from "react";
 import uuid from "uuid/v4";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import logo from "../assets/logo.svg";
+import X from "../assets/theX.svg";
+import formName from "../assets/name-input.svg";
+import email from "../assets/email.svg";
+import checkbox from "../assets/multiple.svg";
+import textarea from "../assets/textarea.svg";
+import initialDragIcon from "../assets/initialdragicon.svg";
 
 import DeleteButton from "./DeleteButton";
 import FormElementGenerator from "./FormElementGenerator";
 import CustomizeSection from "./CustomizeSection";
 import ResetButton from "./ResetButton";
 import CreateFormButton from "./CreateFormButton";
-import FormCreator from './FormCreator'
+import FormCreator from "./FormCreator";
 
 const formElements = [
   {
-    type: "formName"
+    type: "formName",
+    dragName: "Name Input"
   },
   {
-    type: "email"
+    type: "email",
+    dragName: "E-Mail"
   },
   {
-    type: "checkbox"
+    type: "checkbox",
+    dragName: "Multiple Selection"
   },
   {
-    type: "textarea"
+    type: "textarea",
+    dragName: "Text Area"
   }
 ];
 
@@ -38,10 +49,10 @@ export default class App extends Component {
   state = {
     draggedElement: {},
     dropZoneElements: [],
-    elementClicked: '',
+    elementClicked: false,
     customizeSectionType: null,
     key: "",
-    formCreated: false
+    formCreated: false,
   };
 
   onDragStart = (e, el) => {
@@ -53,6 +64,7 @@ export default class App extends Component {
   };
   onDrop = e => {
     const { dropZoneElements, draggedElement } = this.state;
+
     this.setState({
       dropZoneElements: [
         ...dropZoneElements,
@@ -194,6 +206,7 @@ export default class App extends Component {
     const newIds = this.state.dropZoneElements.map((el, index) => index);
     newIds.splice(source.index, 1);
     newIds.splice(destination.index, 0, draggableId);
+
     console.log(newIds);
     const newArray = newIds.map(el => this.state.dropZoneElements[el]);
     this.setState({ dropZoneElements: newArray });
@@ -212,8 +225,8 @@ export default class App extends Component {
     this.setState({ dropZoneElements: newArr });
   };
 
-  handleElementClicked = itemKey => {
-    this.setState({ elementClicked: itemKey });
+  handleElementClicked = () => {
+    this.setState({ elementClicked: this.state.elementClicked ? false : true });
   };
 
   setMaxLength = (itemKey, value) => {
@@ -226,110 +239,159 @@ export default class App extends Component {
     });
 
     this.setState({ dropZoneElements: newArr });
-  }
+  };
 
   createForm = () => {
-    this.setState({formCreated: true})
-  }
+    this.setState({ formCreated: true });
+  };
 
   render() {
-    if(!this.state.formCreated) {
-    //console.log(this.state.dropZoneElements);
-    return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <div className="container">
-          <div className="drag-zone">
-            {formElements.map((el, index) => {
-              return (
-                <div
-                  className="drag-zone-elements"
-                  key={index}
-                  draggable
-                  onDragStart={e => this.onDragStart(e, el)}
-                >
-                  {el.type}
+    if (!this.state.formCreated) {
+      //console.log(this.state.dropZoneElements);
+      return (
+        <DragDropContext
+          onDragEnd={this.onDragEnd}
+          onDragStart={this.dragDropContextOnDragStart}
+        >
+          <div className="main-container">
+            <div className="header">
+              <div className="logo-section">
+                <img src={logo} alt="formod logo" />{" "}
+                <div>
+                  <p>FORMOD</p>
                 </div>
-              );
-            })}
-          </div>
-
-          <Droppable droppableId="form">
-            {provided => (
-              <div
-                className="drop-zone"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                onDrop={e => this.onDrop(e)}
-                onDragOver={e => this.onDragOver(e)}
-              >
-                {this.state.dropZoneElements.map((el, index) => {
+                <div>
+                  <p>Form Builder</p>
+                </div>
+              </div>
+            </div>
+            <div className="form-section-container">
+              <ResetButton resetForm={this.resetForm} />
+              <div className="drag-zone">
+                <div className="close-button">
+                  <img src={X} alt="close button" />
+                </div>
+                <h3>FORM ELEMENTS</h3>
+                {formElements.map((el, index) => {
                   return (
-                    <div key={index}>
-                      {this.state.key === el.key ? (
-                        <CustomizeSection
-                          type={this.state.customizeSectionType}
-                          itemKey={this.state.key}
-                          style={el.style}
-                          itemKey2={el.key}
-                          styleCustomize={this.styleCustomize}
-                          stylePlaceholder={this.stylePlaceholder}
-                          styleCheckbox={this.styleCheckbox}
-                          changeRowValue={this.changeRowValue}
-                          changeColValue={this.changeColValue}
-                          handleRequiredState={this.handleRequiredState}
-                          setMaxLength={this.setMaxLength}
-                        />
-                      ) : null}
-                      <Draggable
-                        draggableId={index.toString()}
-                        index={index}
-                        key={index.toString()}
-                      >
-                        {provided => (
-                          <div
-                            key={index}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            ref={provided.innerRef}
-                            className="drop-zone-elements"
-                          >
-                            <FormElementGenerator
-                              itemKey={el.key}
-                              type={el.type}
-                              style={el.style}
-                              typeHandler={this.typeHandler}
-                              checkboxAddOption={this.checkboxAddOption}
-                              deleteOneOfMultipleSelections={
-                                this.deleteOneOfMultipleSelections
-                              }
-                              handleElementClicked={this.handleElementClicked}
-                              elementClicked={this.state.elementClicked}
-                            />
-                            {this.state.elementClicked === el.key ? (
-                              <DeleteButton
-                                deleteForm={this.deleteForm}
-                                itemKey={el.key}
-                              />
-                            ) : null}
-                          </div>
-                        )}
-                      </Draggable>
+                    <div
+                      className="drag-zone-elements"
+                      key={index}
+                      draggable
+                      onDragStart={e => this.onDragStart(e, el)}
+                    >
+                      <img
+                        src={
+                          el.type === "formName"
+                            ? formName
+                            : el.type === "email"
+                            ? email
+                            : el.type === "checkbox"
+                            ? checkbox
+                            : el.type === "textarea"
+                            ? textarea
+                            : null
+                        }
+                        alt="form element images"
+                      />{" "}
+                      {el.dragName}
                     </div>
                   );
                 })}
-                {provided.placeholder}
+                <div className="unneccessary-hack"></div>
               </div>
-            )}
-          </Droppable>
-        </div>
-        <ResetButton resetForm={this.resetForm} />
-        <CreateFormButton createForm={this.createForm}/>
-      </DragDropContext>
-    );
-        }
-        else {
-          return <FormCreator formElements={this.state.dropZoneElements}/>
-        }
+
+              <Droppable droppableId="form">
+                {provided => (
+                  <div
+                    className="drop-zone"
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    onDrop={e => this.onDrop(e)}
+                    onDragOver={e => this.onDragOver(e)}
+                  >
+                    {!this.state.dropZoneElements.length ? (
+                      <div className="initial-form-message">
+                        <img src={initialDragIcon} alt="drag items here" />
+                        <p>To start, drag items from left panel to here.</p>
+                      </div>
+                    ) : null}
+                                                                    <FormCreator formElements={this.state.dropZoneElements} />
+
+                   {/*  {this.state.dropZoneElements.map((el, index) => {
+                      return (
+                        <div key={index}>
+                          {this.state.key === el.key &&
+                          this.state.elementClicked ? (
+                            <CustomizeSection
+                              type={this.state.customizeSectionType}
+                              itemKey={this.state.key}
+                              style={el.style}
+                              itemKey2={el.key}
+                              styleCustomize={this.styleCustomize}
+                              stylePlaceholder={this.stylePlaceholder}
+                              styleCheckbox={this.styleCheckbox}
+                              changeRowValue={this.changeRowValue}
+                              changeColValue={this.changeColValue}
+                              handleRequiredState={this.handleRequiredState}
+                              setMaxLength={this.setMaxLength}
+                              handleElementClicked={this.handleElementClicked}
+                            />
+                          ) : null}
+                          <Draggable
+                            draggableId={index.toString()}
+                            index={index}
+                            key={index.toString()}
+                          >
+                            {provided => (
+                              <div
+                                key={index}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                ref={provided.innerRef}
+                                className="drop-zone-elements"
+                              >
+                               {  <FormElementGenerator
+                                  itemKey={el.key}
+                                  type={el.type}
+                                  style={el.style}
+                                  typeHandler={this.typeHandler}
+                                  checkboxAddOption={this.checkboxAddOption}
+                                  deleteOneOfMultipleSelections={
+                                    this.deleteOneOfMultipleSelections
+                                  }
+                                  handleElementClicked={
+                                    this.handleElementClicked
+                                  }
+                                  elementClicked={this.state.elementClicked}
+                                  stateKey={this.state.key}
+                                /> }
+                                {this.state.key === el.key ? (
+                                  <DeleteButton
+                                    deleteForm={this.deleteForm}
+                                    itemKey={el.key}
+                                  />
+                                ) : null}
+                              </div>
+                            )}
+                          </Draggable>
+                        </div>
+                      );
+                    })} */}
+                    {provided.placeholder}
+                  </div>
+                )}
+
+              </Droppable>
+            </div>
+
+            <CreateFormButton createForm={this.createForm} />
+          </div>
+        </DragDropContext>
+      );
+    } else {
+      return <FormCreator formElements={this.state.dropZoneElements} />;
+    }
   }
 }
 

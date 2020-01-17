@@ -1,13 +1,16 @@
 import React, { Component } from "react";
-import IsRequired from './IsRequired'
+import CustomizeSectionRender from './CustomizeSectionRender'
 
 export default class CustomizeSection extends Component {
   state = {
     inputValue: this.props.style.name,
     placeholderValue: this.props.style.placeholder,
     checkboxOption: "",
-    textarea:{rows: this.props.style.textarea.rows, cols: this.props.style.textarea.cols},
-    maxLength:this.props.style.maxLength
+    textarea: {
+      rows: this.props.style.textarea.rows,
+      cols: this.props.style.textarea.cols
+    },
+    maxLength: this.props.style.maxLength
   };
 
   handleInput = e => {
@@ -27,30 +30,46 @@ export default class CustomizeSection extends Component {
 
   handleCheckbox = (e, index) => {
     this.setState({ checkboxOption: e.target.value }, () =>
-      this.props.styleCheckbox(this.props.itemKey, this.state.checkboxOption, index )
+      this.props.styleCheckbox(
+        this.props.itemKey,
+        this.state.checkboxOption,
+        index
+      )
     );
   };
 
-  handleTextareaRows = (e) => {
-    this.setState({ textarea: {rows: e.target.value} }, () =>
+  handleTextareaRows = e => {
+    this.setState({ textarea: { rows: e.target.value } }, () =>
       this.props.changeRowValue(this.props.itemKey, this.state.textarea.rows)
     );
-  }
+  };
 
-  handleTextareaCols = (e) => {
-    this.setState({ textarea: {cols: e.target.value} }, () =>
+  handleTextareaCols = e => {
+    this.setState({ textarea: { cols: e.target.value } }, () =>
       this.props.changeColValue(this.props.itemKey, this.state.textarea.cols)
     );
-  }
+  };
 
-  handleMaxLength = (e) => {
+  handleMaxLength = e => {
     this.setState({ maxLength: e.target.value }, () =>
       this.props.setMaxLength(this.props.itemKey, this.state.maxLength)
     );
-  }
+  };
 
   render() {
-    if (
+    return (
+      <div className="customize-section">
+        <button onClick={() => this.props.handleElementClicked()}>Çarpı</button>
+        <CustomizeSectionRender inputValue={this.state.inputValue} placeholderValue={this.state.placeholderValue}
+        checkboxOption={this.state.checkboxOption} textarea={this.state.textarea} maxLength={this.state.maxLength}
+        handleInput={this.handleInput} handlePlaceholder={this.handlePlaceholder} handleCheckbox={this.handleCheckbox}
+        handleTextareaRows={this.handleTextareaRows} handleTextareaCols={this.handleTextareaCols} handleMaxLength={this.handleMaxLength}
+        type={this.props.type} itemKey={this.props.itemKey} itemKey2={this.props.itemKey2} handleRequiredState={this.props.handleRequiredState}
+        style={this.props.style}
+        />
+      </div>
+    )
+    /* if (
       this.props.type === "formName" &&
       this.props.itemKey === this.props.itemKey2
     ) {
@@ -68,8 +87,16 @@ export default class CustomizeSection extends Component {
             value={this.state.placeholderValue}
             onChange={e => this.handlePlaceholder(e)}
           />
-          <IsRequired handleRequiredState={this.props.handleRequiredState} itemKey={this.props.itemKey}/>
-          <label>Max Char Length</label><input value={this.state.maxLength} type="number" onChange={e => this.handleMaxLength(e)}/>
+          <IsRequired
+            handleRequiredState={this.props.handleRequiredState}
+            itemKey={this.props.itemKey}
+          />
+          <label>Max Char Length</label>
+          <input
+            value={this.state.maxLength}
+            type="number"
+            onChange={e => this.handleMaxLength(e)}
+          />
           <div>MAX CHARACTER</div>
           <div> - ALIGN SECTION</div>
         </div>
@@ -93,13 +120,19 @@ export default class CustomizeSection extends Component {
             value={this.state.placeholderValue}
             onChange={e => this.handlePlaceholder(e)}
           />
-          <IsRequired handleRequiredState={this.props.handleRequiredState} itemKey={this.props.itemKey}/>
-          <label>Max Char Length</label><input value={this.state.maxLength} type="number" onChange={e => this.handleMaxLength(e)}/>
-
+          <IsRequired
+            handleRequiredState={this.props.handleRequiredState}
+            itemKey={this.props.itemKey}
+          />
+          <label>Max Char Length</label>
+          <input
+            value={this.state.maxLength}
+            type="number"
+            onChange={e => this.handleMaxLength(e)}
+          />
           <div>MAX CHARACTER</div>
           <div> - ALIGN SECTION</div>
         </div>
-        
       );
     }
     if (
@@ -119,8 +152,10 @@ export default class CustomizeSection extends Component {
               </div>
             );
           })}
-                    <IsRequired handleRequiredState={this.props.handleRequiredState} itemKey={this.props.itemKey}/>
-
+          <IsRequired
+            handleRequiredState={this.props.handleRequiredState}
+            itemKey={this.props.itemKey}
+          />
         </div>
       );
     }
@@ -142,12 +177,26 @@ export default class CustomizeSection extends Component {
             value={this.state.placeholderValue}
             onChange={e => this.handlePlaceholder(e)}
           />
-          Rows <input type="number" value={this.props.style.textarea.rows} onChange={e => this.handleTextareaRows(e)}/>
-          Columns <input type="number" value={this.props.style.textarea.cols} onChange={e => this.handleTextareaCols(e)}/>
-          <label>Max Char Length</label><input value={this.state.maxLength} type="number" onChange={e => this.handleMaxLength(e)}/>
-
+          Rows{" "}
+          <input
+            type="number"
+            value={this.props.style.textarea.rows}
+            onChange={e => this.handleTextareaRows(e)}
+          />
+          Columns{" "}
+          <input
+            type="number"
+            value={this.props.style.textarea.cols}
+            onChange={e => this.handleTextareaCols(e)}
+          />
+          <label>Max Char Length</label>
+          <input
+            value={this.state.maxLength}
+            type="number"
+            onChange={e => this.handleMaxLength(e)}
+          />
         </div>
       );
-    }
+    } */
   }
 }

@@ -4,23 +4,25 @@ import DeleteOneOfMultipleSelectionsButton from "./DeleteOneOfMultipleSelections
 import SettingsOpenClose from "./SettingsOpenClose";
 
 export default class FormElementGenerator extends Component {
+ 
   render() {
     const { name, placeholder } = this.props.style;
     const { style } = this.props;
     if (this.props.type === "formName") {
       return (
-        <div style={{ backgroundColor: style.required ? "pink" : "blue" }} onClick={() => this.props.handleElementClicked(this.props.itemKey)}>
-          <label htmlFor={this.props.itemKey}>{name ? name : "Name:"}</label>
+        <div onClick={() => this.props.typeHandler(this.props.type, this.props.itemKey)}>
+          <label htmlFor={this.props.itemKey}>{name || "Name:"}</label>
           <input
             id={this.props.itemKey}
             type="text"
             readOnly
             placeholder={placeholder}
           ></input>
-          {this.props.elementClicked === this.props.itemKey ? <SettingsOpenClose
+          {this.props.stateKey === this.props.itemKey ? <SettingsOpenClose
             type={this.props.type}
             itemKey={this.props.itemKey}
             typeHandler={this.props.typeHandler}
+            handleElementClicked={this.props.handleElementClicked}
           /> : null }
           
         </div>
@@ -28,18 +30,19 @@ export default class FormElementGenerator extends Component {
     }
     if (this.props.type === "email") {
       return (
-        <div style={{ backgroundColor: style.required ? "pink" : "blue" }} onClick={() => this.props.handleElementClicked(this.props.itemKey)}>
-          <label htmlFor={this.props.itemKey}>{name ? name : "Email:"}</label>
+        <div onClick={() => this.props.typeHandler(this.props.type, this.props.itemKey)}>
+          <label htmlFor={this.props.itemKey}>{name || "Email:"}</label>
           <input
             id={this.props.itemKey}
             type="text"
             readOnly
             placeholder={placeholder}
           ></input>
-          {this.props.elementClicked === this.props.itemKey ? <SettingsOpenClose
+          {this.props.stateKey === this.props.itemKey ? <SettingsOpenClose
             type={this.props.type}
             itemKey={this.props.itemKey}
             typeHandler={this.props.typeHandler}
+            handleElementClicked={this.props.handleElementClicked}
           /> : null }
         </div>
       );
@@ -50,7 +53,8 @@ export default class FormElementGenerator extends Component {
           <label htmlFor={this.props.itemKey}>{name ? name : 'Email:'}</label>
           <input id={this.props.itemKey} type="text" readOnly placeholder={placeholder}></input>
         </div> */
-        <div onClick={() => this.props.handleElementClicked(this.props.itemKey)}>
+        <div onClick={() => this.props.typeHandler(this.props.type, this.props.itemKey)}>
+    <label htmlFor={this.props.itemKey}>{name || "Question"}</label>
           {style.ifCheckbox.map((item, index) => {
             return (
               <div key={index}>
@@ -66,10 +70,11 @@ export default class FormElementGenerator extends Component {
               </div>
             );
           })}
-          {this.props.elementClicked === this.props.itemKey ? <SettingsOpenClose
+          {this.props.stateKey === this.props.itemKey ? <SettingsOpenClose
             type={this.props.type}
             itemKey={this.props.itemKey}
             typeHandler={this.props.typeHandler}
+            handleElementClicked={this.props.handleElementClicked}
           /> : null }
 
           <AddOption
@@ -82,8 +87,8 @@ export default class FormElementGenerator extends Component {
     }
     if (this.props.type === "textarea") {
       return (
-        <div onClick={() => this.props.handleElementClicked(this.props.itemKey)}>
-          <label htmlFor={this.props.itemKey}>{name ? name : "TextArea"}</label>
+        <div onClick={() => this.props.typeHandler(this.props.type, this.props.itemKey)}>
+          <label htmlFor={this.props.itemKey}>{name  || "TextArea"}</label>
           <textarea
             rows={style.textarea.rows}
             cols={style.textarea.cols}
@@ -92,7 +97,8 @@ export default class FormElementGenerator extends Component {
             readOnly
             placeholder={placeholder}
           ></textarea>
-          {this.props.elementClicked === this.props.itemKey ? <SettingsOpenClose
+          {this.props.stateKey === this.props.itemKey ? <SettingsOpenClose
+          handleElementClicked={this.props.handleElementClicked}
             type={this.props.type}
             itemKey={this.props.itemKey}
             typeHandler={this.props.typeHandler}
