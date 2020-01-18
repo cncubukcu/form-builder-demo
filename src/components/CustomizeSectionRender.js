@@ -83,7 +83,7 @@ export default function CustomizeSectionRender(props) {
         {props.style.ifCheckbox.map((item, index) => {
           return (
             <div key={index}>
-              <label>{index + 1}.</label>
+              <label>Option {index + 1}.</label>
               <input
                 value={item.value}
                 onChange={e => props.handleCheckbox(e, index)}

@@ -1,12 +1,6 @@
 import React, { Component } from "react";
 import uuid from "uuid/v4";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import logo from "../assets/logo.svg";
-import X from "../assets/theX.svg";
-import formName from "../assets/name-input.svg";
-import email from "../assets/email.svg";
-import checkbox from "../assets/multiple.svg";
-import textarea from "../assets/textarea.svg";
 import initialDragIcon from "../assets/initialdragicon.svg";
 
 import DeleteButton from "./DeleteButton";
@@ -14,49 +8,21 @@ import FormElementGenerator from "./FormElementGenerator";
 import CustomizeSection from "./CustomizeSection";
 import ResetButton from "./ResetButton";
 import CreateFormButton from "./CreateFormButton";
-import FormCreator from "./FormCreator";
-
-const formElements = [
-  {
-    type: "formName",
-    dragName: "Name Input"
-  },
-  {
-    type: "email",
-    dragName: "E-Mail"
-  },
-  {
-    type: "checkbox",
-    dragName: "Multiple Selection"
-  },
-  {
-    type: "textarea",
-    dragName: "Text Area"
-  }
-];
+import CreatedForm from "./CreatedForm";
+import Header from "./Header";
+import HomeLeftSection from "./HomeLeftSection";
 
 export default class App extends Component {
-  /* constructor(props) {
-    super(props);
-    this.state = {
-      formElements: formElements,
-      draggedElement: {},
-      dropZoneElements: []
-    };
-    React.createRef();
-  } */
-
   state = {
     draggedElement: {},
     dropZoneElements: [],
     elementClicked: false,
     customizeSectionType: null,
     key: "",
-    formCreated: false,
+    formCreated: false
   };
 
   onDragStart = (e, el) => {
-    //e.preventDefault();
     this.setState({ draggedElement: el });
   };
   onDragOver = e => {
@@ -71,14 +37,15 @@ export default class App extends Component {
         {
           ...draggedElement,
           key: uuid(),
+          value: "",
           style: {
             name: "",
             placeholder: "",
             required: false,
             maxLength: 50,
             ifCheckbox: [
-              { value: "First Option", checked: false },
-              { value: "Second Option", checked: false }
+              { value: "Option", checked: false },
+              { value: "Option", checked: false }
             ],
             textarea: { rows: 10, cols: 30 }
           }
@@ -96,8 +63,23 @@ export default class App extends Component {
     });
   };
 
+  handleCheck = (index, itemKey) => {
+    const newArr = [...this.state.dropZoneElements];
+
+    newArr.forEach(item => {
+      if (item["key"] === itemKey) {
+        console.log(item["style"]["ifCheckbox"][index])
+        item["style"]["ifCheckbox"][index].checked
+          ? (item["style"]["ifCheckbox"][index].checked = false)
+          : (item["style"]["ifCheckbox"][index].checked = true);
+      }
+    });
+    console.log(newArr)
+    this.setState({ dropZoneElements: newArr });
+
+  };
+
   styleCustomize = (itemKey, value) => {
-    console.log(this.state.dropZoneElements);
     const newArr = [...this.state.dropZoneElements];
 
     newArr.forEach(item => {
@@ -245,6 +227,18 @@ export default class App extends Component {
     this.setState({ formCreated: true });
   };
 
+  setValue = (itemKey, value) => {
+    const newArr = [...this.state.dropZoneElements];
+
+    newArr.forEach(item => {
+      if (item["key"] === itemKey) {
+        item["value"] = value;
+      }
+    });
+
+    this.setState({ dropZoneElements: newArr });
+  };
+
   render() {
     if (!this.state.formCreated) {
       //console.log(this.state.dropZoneElements);
@@ -254,52 +248,14 @@ export default class App extends Component {
           onDragStart={this.dragDropContextOnDragStart}
         >
           <div className="main-container">
-            <div className="header">
-              <div className="logo-section">
-                <img src={logo} alt="formod logo" />{" "}
-                <div>
-                  <p>FORMOD</p>
-                </div>
-                <div>
-                  <p>Form Builder</p>
-                </div>
-              </div>
-            </div>
+            <Header name="FORMOD" text="Form Builder" />
+
             <div className="form-section-container">
               <ResetButton resetForm={this.resetForm} />
-              <div className="drag-zone">
-                <div className="close-button">
-                  <img src={X} alt="close button" />
-                </div>
-                <h3>FORM ELEMENTS</h3>
-                {formElements.map((el, index) => {
-                  return (
-                    <div
-                      className="drag-zone-elements"
-                      key={index}
-                      draggable
-                      onDragStart={e => this.onDragStart(e, el)}
-                    >
-                      <img
-                        src={
-                          el.type === "formName"
-                            ? formName
-                            : el.type === "email"
-                            ? email
-                            : el.type === "checkbox"
-                            ? checkbox
-                            : el.type === "textarea"
-                            ? textarea
-                            : null
-                        }
-                        alt="form element images"
-                      />{" "}
-                      {el.dragName}
-                    </div>
-                  );
-                })}
-                <div className="unneccessary-hack"></div>
-              </div>
+              <HomeLeftSection
+                onDragStart={this.onDragStart}
+                title="FORM ELEMENTS"
+              />
 
               <Droppable droppableId="form">
                 {provided => (
@@ -316,9 +272,7 @@ export default class App extends Component {
                         <p>To start, drag items from left panel to here.</p>
                       </div>
                     ) : null}
-                                                                    <FormCreator formElements={this.state.dropZoneElements} />
-
-                   {/*  {this.state.dropZoneElements.map((el, index) => {
+                    {this.state.dropZoneElements.map((el, index) => {
                       return (
                         <div key={index}>
                           {this.state.key === el.key &&
@@ -351,21 +305,23 @@ export default class App extends Component {
                                 ref={provided.innerRef}
                                 className="drop-zone-elements"
                               >
-                               {  <FormElementGenerator
-                                  itemKey={el.key}
-                                  type={el.type}
-                                  style={el.style}
-                                  typeHandler={this.typeHandler}
-                                  checkboxAddOption={this.checkboxAddOption}
-                                  deleteOneOfMultipleSelections={
-                                    this.deleteOneOfMultipleSelections
-                                  }
-                                  handleElementClicked={
-                                    this.handleElementClicked
-                                  }
-                                  elementClicked={this.state.elementClicked}
-                                  stateKey={this.state.key}
-                                /> }
+                                {
+                                  <FormElementGenerator
+                                    itemKey={el.key}
+                                    type={el.type}
+                                    style={el.style}
+                                    typeHandler={this.typeHandler}
+                                    checkboxAddOption={this.checkboxAddOption}
+                                    deleteOneOfMultipleSelections={
+                                      this.deleteOneOfMultipleSelections
+                                    }
+                                    handleElementClicked={
+                                      this.handleElementClicked
+                                    }
+                                    elementClicked={this.state.elementClicked}
+                                    stateKey={this.state.key}
+                                  />
+                                }
                                 {this.state.key === el.key ? (
                                   <DeleteButton
                                     deleteForm={this.deleteForm}
@@ -377,11 +333,10 @@ export default class App extends Component {
                           </Draggable>
                         </div>
                       );
-                    })} */}
+                    })}
                     {provided.placeholder}
                   </div>
                 )}
-
               </Droppable>
             </div>
 
@@ -390,7 +345,13 @@ export default class App extends Component {
         </DragDropContext>
       );
     } else {
-      return <FormCreator formElements={this.state.dropZoneElements} />;
+      return (
+        <CreatedForm
+          formElements={this.state.dropZoneElements}
+          setValue={this.setValue}
+          handleCheck={this.handleCheck}
+        />
+      );
     }
   }
 }
