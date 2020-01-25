@@ -1,50 +1,10 @@
-import React, { Component } from "react";
-import CreatedFormRender from "./CreatedFormRender";
+import React, { Component } from 'react'
 
-export default class CreatedForm extends Component {
-  state = { inputValue: "", formResult: false };
-
-  onSubmit = e => {
-    e.preventDefault();
-    let results = {};
-    this.props.formElements.map((item, index) => {
-      if (item.type === "checkbox") {
-        return (results = {
-          ...results,
-          [index]: {
-            [item.style.name || item.defaultName]: item.style.ifCheckbox
-          }
-        });
-      } else {
-        return (results = {
-          ...results,
-          [index]: { [item.style.name || item.defaultName]: item.value }
-        });
-      }
-    });
-    alert(JSON.stringify(results));
-  };
-
-  handleInput = (e, itemKey) => {
-    this.setState({ inputValue: e.target.value }, () =>
-      this.props.setValue(itemKey, this.state.inputValue)
-    );
-  };
-
+export default class CreatedFormRender extends Component {
   render() {
     return (
-      <CreatedFormRender
-        formElements={this.props.formElements}
-        handleInput={this.handleInput}
-        onSubmit={this.onSubmit}
-        createForm={this.props.createForm}
-        handleCheck={this.props.handleCheck}
-      />
-    );
-  }
-}
-/* <div>
-        <form onSubmit={this.onSubmit}>
+      <div>
+        <form onSubmit={this.props.onSubmit}>
           {this.props.formElements.map((item, index) => {
             switch (item.type) {
               case "formName":
@@ -59,7 +19,7 @@ export default class CreatedForm extends Component {
                       maxLength={item.style.maxLength}
                       id={item.key}
                       required={item.style.required ? true : null}
-                      onChange={e => this.handleInput(e, item.key)}
+                      onChange={e => this.props.handleInput(e, item.key)}
                     />
                   </div>
                 );
@@ -76,7 +36,7 @@ export default class CreatedForm extends Component {
                       maxLength={item.style.maxLength}
                       id={item.key}
                       required={item.style.required ? true : null}
-                      onChange={e => this.handleInput(e, item.key)}
+                      onChange={e => this.props.handleInput(e, item.key)}
                     />
                   </div>
                 );
@@ -84,8 +44,8 @@ export default class CreatedForm extends Component {
               case "checkbox":
                 return (
                   <div key={index.toString()}>
-                    <label htmlFor={this.props.formElements.key}>
-                      {item.name || "Question"}
+                    <label htmlFor={item.key}>
+                      {item.style.name || "Question"}
                     </label>
 
                     {item.style.ifCheckbox.map((option, index) => {
@@ -107,7 +67,7 @@ export default class CreatedForm extends Component {
               case "textarea":
                 return (
                   <div key={index.toString()}>
-                    <label htmlFor={item.key}>{item.style.name}</label>
+                    <label htmlFor={item.key}>{item.style.name || 'Question'}</label>
                     <textarea
                       rows={item.style.textarea.rows}
                       cols={item.style.textarea.cols}
@@ -115,17 +75,20 @@ export default class CreatedForm extends Component {
                       type="text"
                       placeholder={item.style.placeholder}
                       required={item.style.required ? true : null}
-                      onChange={e => this.handleInput(e, item.key)}
+                      onChange={e => this.props.handleInput(e, item.key)}
+                      maxLength={item.style.maxLength}
                     ></textarea>
                   </div>
                 );
 
               default:
-                return <div></div>;
+                return <div key={index.toString()}></div>;
             }
           })}
-          <input type="submit" />
+          <input type="submit" value="Submit" /> 
         </form>
           <button onClick={() => this.props.createForm(false)}>EDIT</button>
       </div>
-    ); */
+    );
+  }
+}

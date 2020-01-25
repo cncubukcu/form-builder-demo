@@ -1,9 +1,21 @@
-import React from 'react'
+import React from "react";
 
-export default function IsRequired({itemKey, handleRequiredState}) {
+export default function IsRequired({
+  itemKey,
+  handleRequiredState,
+  isRequired
+}) {
+  console.log(isRequired);
   return (
-    <div style={{width: '100px', height: '20px', backgroundColor:'blue'}} onClick={() => handleRequiredState(itemKey)}>
-      Required?
+    <div
+      className="IsRequired"
+           
+    >
+      <p>Required ?</p>
+      <div className={`IsRequired-outer-div ${isRequired ? 'background-main-yellow' : null}` } onClick={() => handleRequiredState(itemKey)}  >
+        <div className={isRequired ? 'IsRequired-inner-div absolute-right' : 'IsRequired-inner-div absolute-left'}></div>
+        <span style={{color: isRequired ? '#f1af27': null}}>{isRequired ? 'ON' : 'OFF'}</span>
+      </div>
     </div>
-  )
+  );
 }

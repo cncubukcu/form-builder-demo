@@ -1,9 +1,17 @@
 import React from "react";
+import IconSelectionDelete from "./Icons/IconSelectionDelete";
 
-export default function DeleteOneOfMultipleSelectionsButton({itemKey, index, deleteOneOfMultipleSelections}) {
+export default function DeleteOneOfMultipleSelectionsButton({
+  itemKey,
+  index,
+  deleteOneOfMultipleSelections
+}) {
   return (
-    <div>
-      <button onClick={() => deleteOneOfMultipleSelections(itemKey, index)}>Del</button>
+    <div
+      className="delete-selections-button"
+      onClick={() => deleteOneOfMultipleSelections(itemKey, index)}
+    >
+      <IconSelectionDelete />
     </div>
   );
 }

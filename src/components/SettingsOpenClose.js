@@ -1,9 +1,12 @@
 import React from 'react'
+import IconSettingsButton from './Icons/IconSettingsButton'
 
-export default function SettingsOpenClose({typeHandler, type, itemKey, handleElementClicked}) {
+export default function SettingsOpenClose({handleElementClicked}) {
   return (
     <div>
-      <button onClick={() => handleElementClicked()}>Settings</button>
+      <div className="form-element-settings" onClick={() => handleElementClicked()} >
+        <IconSettingsButton/>
+      </div>
     </div>
   )
 }

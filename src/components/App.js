@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import uuid from "uuid/v4";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import initialDragIcon from "../assets/initialdragicon.svg";
+import IconInitialDrag from "./Icons/IconInitialDrag";
 
 import DeleteButton from "./DeleteButton";
 import FormElementGenerator from "./FormElementGenerator";
@@ -11,6 +12,7 @@ import CreateFormButton from "./CreateFormButton";
 import CreatedForm from "./CreatedForm";
 import Header from "./Header";
 import HomeLeftSection from "./HomeLeftSection";
+import ColorPicker from "./ColorPicker";
 
 export default class App extends Component {
   state = {
@@ -19,7 +21,12 @@ export default class App extends Component {
     elementClicked: false,
     customizeSectionType: null,
     key: "",
-    formCreated: false
+    formCreated: false,
+    ColorPickerForFormBackground: "#fcfcfc"
+  };
+
+  handleColorPickerForFormBackground = color => {
+    this.setState({ ColorPickerForFormBackground: color });
   };
 
   onDragStart = (e, el) => {
@@ -30,32 +37,41 @@ export default class App extends Component {
   };
   onDrop = e => {
     const { dropZoneElements, draggedElement } = this.state;
-
-    this.setState({
-      dropZoneElements: [
-        ...dropZoneElements,
-        {
-          ...draggedElement,
-          key: uuid(),
-          value: "",
-          style: {
-            name: "",
-            placeholder: "",
-            required: false,
-            maxLength: 50,
-            ifCheckbox: [
-              { value: "Option", checked: false },
-              { value: "Option", checked: false }
-            ],
-            textarea: { rows: 10, cols: 30 }
+    if (draggedElement.type) {
+      this.setState({
+        dropZoneElements: [
+          ...dropZoneElements,
+          {
+            ...draggedElement,
+            key: uuid(),
+            value: "",
+            style: {
+              name: "",
+              placeholder: "",
+              required: false,
+              maxLength: 50,
+              ifCheckbox: [
+                { value: "Option", checked: false },
+                { value: "Option", checked: false }
+              ],
+              textarea: { rows: 10, cols: 30 }
+            }
           }
-        }
-      ],
-      draggedElement: {}
-    });
+        ],
+        draggedElement: {}
+      });
+    }
   };
 
   deleteForm = key => {
+    if (this.state.dropZoneElements.length === 1) {
+      this.setState({
+        dropZoneElements: this.state.dropZoneElements.filter(
+          item => key !== item.key
+        ),
+        ColorPickerForFormBackground: "#fcfcfc"
+      });
+    }
     this.setState({
       dropZoneElements: this.state.dropZoneElements.filter(
         item => key !== item.key
@@ -68,15 +84,14 @@ export default class App extends Component {
 
     newArr.forEach(item => {
       if (item["key"] === itemKey) {
-        console.log(item["style"]["ifCheckbox"][index])
+        console.log(item["style"]["ifCheckbox"][index]);
         item["style"]["ifCheckbox"][index].checked
           ? (item["style"]["ifCheckbox"][index].checked = false)
           : (item["style"]["ifCheckbox"][index].checked = true);
       }
     });
-    console.log(newArr)
+    console.log(newArr);
     this.setState({ dropZoneElements: newArr });
-
   };
 
   styleCustomize = (itemKey, value) => {
@@ -119,7 +134,7 @@ export default class App extends Component {
     newArr.forEach(item => {
       if (item["key"] === itemKey) {
         console.log("found");
-        item["style"]["ifCheckbox"].push({ value: "", checked: false });
+        item["style"]["ifCheckbox"].push({ value: "Option", checked: false });
       }
     });
 
@@ -129,7 +144,7 @@ export default class App extends Component {
   typeHandler = (type, key) => {
     this.setState({ customizeSectionType: type, key: key });
   };
-
+  //Checkbox
   deleteOneOfMultipleSelections = (itemKey, index) => {
     const newArr = [...this.state.dropZoneElements];
     newArr.forEach(item => {
@@ -168,10 +183,14 @@ export default class App extends Component {
     this.setState({ dropZoneElements: newArr });
   };
   resetForm = () => {
-    this.setState({ dropZoneElements: [] });
+    this.setState({
+      dropZoneElements: [],
+      ColorPickerForFormBackground: "#fcfcfc"
+    });
   };
 
   onDragEnd = result => {
+    console.log(this.state.dropZoneElements);
     const { destination, source, draggableId } = result;
     //outside of droppable
     if (!destination) {
@@ -223,8 +242,8 @@ export default class App extends Component {
     this.setState({ dropZoneElements: newArr });
   };
 
-  createForm = () => {
-    this.setState({ formCreated: true });
+  createForm = trueOrFalse => {
+    this.setState({ formCreated: trueOrFalse });
   };
 
   setValue = (itemKey, value) => {
@@ -241,12 +260,8 @@ export default class App extends Component {
 
   render() {
     if (!this.state.formCreated) {
-      //console.log(this.state.dropZoneElements);
       return (
-        <DragDropContext
-          onDragEnd={this.onDragEnd}
-          onDragStart={this.dragDropContextOnDragStart}
-        >
+        <DragDropContext onDragEnd={this.onDragEnd}>
           <div className="main-container">
             <Header name="FORMOD" text="Form Builder" />
 
@@ -265,82 +280,99 @@ export default class App extends Component {
                     ref={provided.innerRef}
                     onDrop={e => this.onDrop(e)}
                     onDragOver={e => this.onDragOver(e)}
+                    style={{
+                      backgroundColor:
+                        this.state.dropZoneElements.length &&
+                        !this.state.draggedElement.type
+                          ? this.state.ColorPickerForFormBackground
+                          : this.state.draggedElement.type
+                          ? "#FEF6DE"
+                          : "#fcfcfc"
+                    }}
                   >
-                    {!this.state.dropZoneElements.length ? (
+                    {!this.state.dropZoneElements.length ||
+                    !this.state.dropZoneElements[0].type ? (
                       <div className="initial-form-message">
-                        <img src={initialDragIcon} alt="drag items here" />
+                        <IconInitialDrag />
                         <p>To start, drag items from left panel to here.</p>
                       </div>
                     ) : null}
+                    {/*eslint-disable-next-line*/}
                     {this.state.dropZoneElements.map((el, index) => {
-                      return (
-                        <div key={index}>
-                          {this.state.key === el.key &&
-                          this.state.elementClicked ? (
-                            <CustomizeSection
-                              type={this.state.customizeSectionType}
-                              itemKey={this.state.key}
-                              style={el.style}
-                              itemKey2={el.key}
-                              styleCustomize={this.styleCustomize}
-                              stylePlaceholder={this.stylePlaceholder}
-                              styleCheckbox={this.styleCheckbox}
-                              changeRowValue={this.changeRowValue}
-                              changeColValue={this.changeColValue}
-                              handleRequiredState={this.handleRequiredState}
-                              setMaxLength={this.setMaxLength}
-                              handleElementClicked={this.handleElementClicked}
-                            />
-                          ) : null}
-                          <Draggable
-                            draggableId={index.toString()}
-                            index={index}
-                            key={index.toString()}
-                          >
-                            {provided => (
-                              <div
-                                key={index}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                ref={provided.innerRef}
-                                className="drop-zone-elements"
-                              >
-                                {
-                                  <FormElementGenerator
-                                    itemKey={el.key}
-                                    type={el.type}
-                                    style={el.style}
-                                    typeHandler={this.typeHandler}
-                                    checkboxAddOption={this.checkboxAddOption}
-                                    deleteOneOfMultipleSelections={
-                                      this.deleteOneOfMultipleSelections
-                                    }
-                                    handleElementClicked={
-                                      this.handleElementClicked
-                                    }
-                                    elementClicked={this.state.elementClicked}
-                                    stateKey={this.state.key}
-                                  />
+                      if (el.type) {
+                        return (
+                          <div key={index}>
+                            <Draggable
+                              draggableId={index.toString()}
+                              index={index}
+                              key={index.toString()}
+                            >
+                              {provided => (
+                                <div
+                                  key={index}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  ref={provided.innerRef}
+                                  className="drop-zone-elements"
+                                >
+                                  {
+                                    <FormElementGenerator
+                                      itemKey={el.key}
+                                      type={el.type}
+                                      style={el.style}
+                                      typeHandler={this.typeHandler}
+                                      checkboxAddOption={this.checkboxAddOption}
+                                      deleteOneOfMultipleSelections={
+                                        this.deleteOneOfMultipleSelections
+                                      }
+                                      handleElementClicked={
+                                        this.handleElementClicked
+                                      }
+                                      elementClicked={this.state.elementClicked}
+                                      stateKey={this.state.key}
+                                    />
+                                  }
+                                  {this.state.key === el.key ? (
+                                    <DeleteButton
+                                      deleteForm={this.deleteForm}
+                                      itemKey={el.key}
+                                    />
+                                  ) : null}
+                                </div>
+                              )}
+                            </Draggable>
+                            {this.state.key === el.key &&
+                            this.state.elementClicked ? (
+                              <CustomizeSection
+                                type={this.state.customizeSectionType}
+                                itemKey={this.state.key}
+                                style={el.style}
+                                styleCustomize={this.styleCustomize}
+                                stylePlaceholder={this.stylePlaceholder}
+                                styleCheckbox={this.styleCheckbox}
+                                changeRowValue={this.changeRowValue}
+                                changeColValue={this.changeColValue}
+                                handleRequiredState={this.handleRequiredState}
+                                setMaxLength={this.setMaxLength}
+                                handleElementClicked={this.handleElementClicked}
+                                handleColorPickerForFormBackground={
+                                  this.handleColorPickerForFormBackground
                                 }
-                                {this.state.key === el.key ? (
-                                  <DeleteButton
-                                    deleteForm={this.deleteForm}
-                                    itemKey={el.key}
-                                  />
-                                ) : null}
-                              </div>
-                            )}
-                          </Draggable>
-                        </div>
-                      );
+                                dropZoneElements={this.state.dropZoneElements}
+                                dragName={el.dragName}
+                              />
+                            ) : null}
+                          </div>
+                        );
+                      }
                     })}
                     {provided.placeholder}
                   </div>
                 )}
               </Droppable>
+              
+              <CreateFormButton createForm={this.createForm} />
             </div>
-
-            <CreateFormButton createForm={this.createForm} />
           </div>
         </DragDropContext>
       );
@@ -350,6 +382,7 @@ export default class App extends Component {
           formElements={this.state.dropZoneElements}
           setValue={this.setValue}
           handleCheck={this.handleCheck}
+          createForm={this.createForm}
         />
       );
     }

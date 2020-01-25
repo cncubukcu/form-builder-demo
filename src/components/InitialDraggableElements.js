@@ -3,11 +3,15 @@ import formName from "../assets/name-input.svg";
 import email from "../assets/email.svg";
 import checkbox from "../assets/multiple.svg";
 import textarea from "../assets/textarea.svg";
+import IconNameInput from './Icons/IconNameInput'
+import IconEmailInput from './Icons/IconEmailInput'
+import IconSelection from './Icons/IconSelection'
+import IconTextarea from './Icons/IconTextarea'
 
 const formElements = [
   {
     type: "formName",
-    dragName: "Name Input",
+    dragName: "Name",
     defaultName: 'Name'
   },
   {
@@ -18,7 +22,7 @@ const formElements = [
   },
   {
     type: "checkbox",
-    dragName: "Multiple Selection",
+    dragName: "Selection",
     defaultName: 'Question'
 
   },
@@ -39,20 +43,18 @@ export default function InitialDraggableElements({ onDragStart }) {
         draggable
         onDragStart={e => onDragStart(e, element)}
       >
-        <img
-          src={
+       {
             element.type === "formName"
-              ? formName
+              ? <IconNameInput />
               : element.type === "email"
-              ? email
+              ? <IconEmailInput />
               : element.type === "checkbox"
-              ? checkbox
+              ? <IconSelection />
               : element.type === "textarea"
-              ? textarea
+              ? <IconTextarea />
               : null
           }
-          alt="form element images"
-        />{" "}
+         
         {element.dragName}
       </div>
     );
