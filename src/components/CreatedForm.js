@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import CreatedFormRender from "./CreatedFormRender";
+import Header from "./Header";
 
 export default class CreatedForm extends Component {
   state = { inputValue: "", formResult: false };
@@ -33,13 +34,18 @@ export default class CreatedForm extends Component {
 
   render() {
     return (
-      <CreatedFormRender
-        formElements={this.props.formElements}
-        handleInput={this.handleInput}
-        onSubmit={this.onSubmit}
-        createForm={this.props.createForm}
-        handleCheck={this.props.handleCheck}
-      />
+      <div className="main-container">
+        <Header name="FORMOD" text="Form Builder" />
+        <CreatedFormRender
+          formElements={this.props.formElements}
+          handleInput={this.handleInput}
+          onSubmit={this.onSubmit}
+          createForm={this.props.createForm}
+          handleCheck={this.props.handleCheck}
+          ColorPickerForFormBackground={this.props.ColorPickerForFormBackground}
+          ColorPickerForFormColor={this.props.ColorPickerForFormColor}
+        />
+      </div>
     );
   }
 }

@@ -135,14 +135,20 @@ export default class CustomizeSection extends Component {
             itemKey={this.props.itemKey}
             handleRequiredState={this.props.handleRequiredState}
             style={this.props.style}
-            
           />
         ) : (
           <CustomizeSectionCssSettingsTab
             handleColorPickerForFormBackground={
               this.props.handleColorPickerForFormBackground
             }
+            handleColorPickerForFormColor={
+              this.props.handleColorPickerForFormColor
+            }
             dropZoneElements={this.props.dropZoneElements}
+            ColorPickerForFormBackground={
+              this.props.ColorPickerForFormBackground
+            }
+            ColorPickerForFormColor={this.props.ColorPickerForFormColor}
           />
         )}
       </div>

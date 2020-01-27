@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import uuid from "uuid/v4";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import initialDragIcon from "../assets/initialdragicon.svg";
 import IconInitialDrag from "./Icons/IconInitialDrag";
 
 import DeleteButton from "./DeleteButton";
@@ -12,7 +11,6 @@ import CreateFormButton from "./CreateFormButton";
 import CreatedForm from "./CreatedForm";
 import Header from "./Header";
 import HomeLeftSection from "./HomeLeftSection";
-import ColorPicker from "./ColorPicker";
 
 export default class App extends Component {
   state = {
@@ -22,11 +20,16 @@ export default class App extends Component {
     customizeSectionType: null,
     key: "",
     formCreated: false,
-    ColorPickerForFormBackground: "#fcfcfc"
+    ColorPickerForFormBackground: "#fcfcfc",
+    ColorPickerForFormColor: "#000000"
   };
 
   handleColorPickerForFormBackground = color => {
     this.setState({ ColorPickerForFormBackground: color });
+  };
+
+  handleColorPickerForFormColor = color => {
+    this.setState({ ColorPickerForFormColor: color });
   };
 
   onDragStart = (e, el) => {
@@ -69,7 +72,8 @@ export default class App extends Component {
         dropZoneElements: this.state.dropZoneElements.filter(
           item => key !== item.key
         ),
-        ColorPickerForFormBackground: "#fcfcfc"
+        ColorPickerForFormBackground: "#fcfcfc",
+        ColorPickerForFormColor: "#000000"
       });
     }
     this.setState({
@@ -185,7 +189,8 @@ export default class App extends Component {
   resetForm = () => {
     this.setState({
       dropZoneElements: [],
-      ColorPickerForFormBackground: "#fcfcfc"
+      ColorPickerForFormBackground: "#fcfcfc",
+      ColorPickerForFormColor: "#000000"
     });
   };
 
@@ -281,13 +286,12 @@ export default class App extends Component {
                     onDrop={e => this.onDrop(e)}
                     onDragOver={e => this.onDragOver(e)}
                     style={{
-                      backgroundColor:
-                        this.state.dropZoneElements.length &&
-                        !this.state.draggedElement.type
-                          ? this.state.ColorPickerForFormBackground
-                          : this.state.draggedElement.type
-                          ? "#FEF6DE"
-                          : "#fcfcfc"
+                      backgroundColor: this.state.dropZoneElements.length
+                        ? this.state.ColorPickerForFormBackground
+                        : "#fcfcfc",
+                      color: this.state.dropZoneElements.length
+                        ? this.state.ColorPickerForFormColor
+                        : "#000000"
                     }}
                   >
                     {!this.state.dropZoneElements.length ||
@@ -358,8 +362,17 @@ export default class App extends Component {
                                 handleColorPickerForFormBackground={
                                   this.handleColorPickerForFormBackground
                                 }
+                                handleColorPickerForFormColor={
+                                  this.handleColorPickerForFormColor
+                                }
                                 dropZoneElements={this.state.dropZoneElements}
                                 dragName={el.dragName}
+                                ColorPickerForFormBackground={
+                                  this.state.ColorPickerForFormBackground
+                                }
+                                ColorPickerForFormColor={
+                                  this.state.ColorPickerForFormColor
+                                }
                               />
                             ) : null}
                           </div>
@@ -370,7 +383,7 @@ export default class App extends Component {
                   </div>
                 )}
               </Droppable>
-              
+
               <CreateFormButton createForm={this.createForm} />
             </div>
           </div>
@@ -383,6 +396,8 @@ export default class App extends Component {
           setValue={this.setValue}
           handleCheck={this.handleCheck}
           createForm={this.createForm}
+          ColorPickerForFormBackground={this.state.ColorPickerForFormBackground}
+          ColorPickerForFormColor={this.state.ColorPickerForFormColor}
         />
       );
     }

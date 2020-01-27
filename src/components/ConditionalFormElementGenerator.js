@@ -14,13 +14,17 @@ export default function ConditionalFormElementGenerator({
   ifCheckbox,
   stateKey
 }) {
- /*  if(type === false) {
+  /*  if(type === false) {
     return null;
   } */
   if (type === "formName") {
     return (
       /*aşağıya app.jsde state olarak attığın flex-direction classını ekle align durumunda*/
-      <div className={`dropped-elements-inputs ${stateKey === itemKey ? 'click-border' : null}`} >
+      <div
+        className={`dropped-elements-inputs ${
+          stateKey === itemKey ? "click-border" : null
+        }`}
+      >
         <label htmlFor={itemKey}>{name || "Name:"}</label>
         <input
           id={itemKey}
@@ -33,7 +37,11 @@ export default function ConditionalFormElementGenerator({
   }
   if (type === "email") {
     return (
-      <div className={`dropped-elements-inputs ${stateKey === itemKey ? 'click-border' : null}`}>
+      <div
+        className={`dropped-elements-inputs ${
+          stateKey === itemKey ? "click-border" : null
+        }`}
+      >
         <label htmlFor={itemKey}>{name || "E-Mail:"}</label>
         <input
           id={itemKey}
@@ -46,7 +54,11 @@ export default function ConditionalFormElementGenerator({
   }
   if (type === "checkbox") {
     return (
-      <div className={`dropped-elements-inputs checkbox ${stateKey === itemKey ? 'click-border' : null}`}>
+      <div
+        className={`dropped-elements-inputs checkbox ${
+          stateKey === itemKey ? "click-border" : null
+        }`}
+      >
         <label htmlFor={itemKey}>{name || "Question:"}</label>
         {ifCheckbox.map((item, index) => {
           return (
@@ -71,8 +83,11 @@ export default function ConditionalFormElementGenerator({
   }
   if (type === "textarea") {
     return (
-      <div className={`textarea ${stateKey === itemKey ? 'click-border' : null}`}>
-        <label htmlFor={itemKey}>{name || "Question:"}</label><br/>
+      <div
+        className={`textarea ${stateKey === itemKey ? "click-border" : null}`}
+      >
+        <label htmlFor={itemKey}>{name || "Question:"}</label>
+        <br />
         <textarea
           rows={rows}
           cols={cols}
