@@ -3,7 +3,7 @@ import React, { Component } from "react";
 export default class CreatedFormRender extends Component {
   render() {
     return (
-      <div className="form-section-container">
+      <div className="form-section-container-created-form">
         <div
           className="drop-zone"
           style={{
