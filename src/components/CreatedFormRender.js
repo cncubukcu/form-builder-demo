@@ -78,6 +78,7 @@ export default class CreatedFormRender extends Component {
                                   type="checkbox"
                                   index={index}
                                   value={item.value}
+                                  checked={option.checked ? true : false}
                                   onClick={() =>
                                     this.props.handleCheck(index, item.key)
                                   }

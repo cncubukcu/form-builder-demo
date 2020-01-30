@@ -14,12 +14,8 @@ export default function ConditionalFormElementGenerator({
   ifCheckbox,
   stateKey
 }) {
-  /*  if(type === false) {
-    return null;
-  } */
   if (type === "formName") {
     return (
-      /*aşağıya app.jsde state olarak attığın flex-direction classını ekle align durumunda*/
       <div
         className={`dropped-elements-inputs ${
           stateKey === itemKey ? "click-border" : null
@@ -63,7 +59,7 @@ export default function ConditionalFormElementGenerator({
         {ifCheckbox.map((item, index) => {
           return (
             <div className="flex-start font-12-grey" key={index}>
-              <input type="checkbox" value={item.value} readOnly />
+              <input type="checkbox" value={item.value} readOnly disabled />
               {item.value}{" "}
               <DeleteOneOfMultipleSelectionsButton
                 index={index}
